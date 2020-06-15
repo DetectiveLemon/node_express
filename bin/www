@@ -5,8 +5,17 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('node-express:server');
+var debug = require('debug')('express-hello:server');
 var http = require('http');
+
+process.env.UV_THREADPOOL_SIZE = 64;
+
+const pool = require('../oracle/pool');
+
+process
+    .once('SIGTERM', pool.closeAndExit)
+    .once('SIGINT',  pool.closeAndExit);
+
 
 /**
  * Get port from environment and store in Express.
