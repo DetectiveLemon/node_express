@@ -30,4 +30,16 @@ router.post('/login', async function(req, res, next) {
 
 });
 
+router.post('/status/:status', async function(req, res, next){
+  try {
+    let token = req.headers['token'];
+    let en_id = tokenUtil.getEN_ID(token);
+    let staus = req.params['status'];
+    await user.updateStatus(en_id, staus);
+    res.json(resultUtil.success());
+  }catch (e) {
+    res.json(resultUtil.error(500, e));
+  }
+});
+
 module.exports = router;

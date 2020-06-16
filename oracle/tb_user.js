@@ -29,4 +29,29 @@ user.getUserById = async function (id) {
 
 };
 
+user.updateStatus = async function(en_id, status){
+    let connection;
+    try {
+        connection = await pool.getConn();
+        let sql = " update tb_user set status = :status where en_id = :id";
+        let binds = [status, en_id];
+        let options = {
+            autoCommit: true,
+            outFormat: oracledb.OUT_FORMAT_OBJECT
+        };
+        await connection.execute(sql, binds, options);
+
+    }catch (e) {
+        console.error(e);
+    }finally {
+        if (connection){
+            try {
+                await connection.close();
+            }catch (e) {
+                console.log(e);
+            }
+        }
+    }
+};
+
 module.exports = user;
