@@ -5,8 +5,17 @@ const tokenUtil = require('../util/tokenUtil');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', async function(req, res, next) {
+  try {
+    let token = req.headers['token'];
+    let en_id = tokenUtil.getEN_ID(token);
+    let r = await user.getUserById(en_id);
+    r = r[0];
+    delete r['PWD'];
+    res.json(resultUtil.success(r));
+  }catch (e) {
+    res.json(resultUtil.error(500, e));
+  }
 });
 
 router.post('/login', async function(req, res, next) {
